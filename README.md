@@ -109,4 +109,4 @@ The server will safely run on `http://localhost:3000`. Open this address in your
 ---
 
 ## 👨‍💻 Author
-**Priyanshu Panwar** *(Maintainer & Developer)*
+**Pushkar Chhokar** *(Maintainer & Developer)*
