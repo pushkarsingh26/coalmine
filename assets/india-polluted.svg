@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600">
+  <defs>
+    <linearGradient id="g1" x1="0" x2="1">
+      <stop offset="0%" stop-color="#b03a2e" />
+      <stop offset="100%" stop-color="#f39c12" />
+    </linearGradient>
+  </defs>
+  <rect width="100%" height="100%" fill="#2c2c2c" />
+  <!-- stylized India outline box (placeholder) -->
+  <g transform="translate(120,60)">
+    <rect rx="18" ry="18" width="960" height="420" fill="url(#g1)" opacity="0.95" />
+    <text x="480" y="200" font-family="Segoe UI, Arial" font-size="48" fill="#fff" text-anchor="middle">India — Polluted</text>
+    <text x="480" y="260" font-family="Segoe UI, Arial" font-size="20" fill="#fff" text-anchor="middle">Higher CO₂ / methane / VAM emissions</text>
+  </g>
+  <!-- subtle haze overlay -->
+  <rect width="100%" height="100%" fill="#fff" opacity="0.06" />
+</svg>

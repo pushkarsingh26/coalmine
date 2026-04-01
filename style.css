@@ -1,0 +1,2199 @@
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+    url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAR8AwFwO9yXGD7EtnwOBRfGlr4vLmtx9V2KcFe-k5-1OMYwmWyHtHOLVSeTzhfgwVjRk&usqp=CAU");
+  background-size: cover;
+  color: black;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 230px;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  padding: 20px;
+  transition: width 0.4s ease, padding 0.4s ease;
+}
+.sidebar h2 {
+  cursor: pointer;
+  user-select: none; /* Prevents text selection on click */
+  text-align: center; /* Center icon when collapsed */
+  color: white;
+}
+.sidebar-title-text {
+  transition: opacity 0.3s ease;
+}
+.sidebar ul { list-style: none; padding: 0; }
+.sidebar ul {
+  max-height: 500px; /* Adjust if menu is taller */
+  transition: max-height 0.4s ease-out;
+}
+.sidebar ul li a {
+  color: white;
+  display: block;
+  padding: 10px;
+  text-decoration: none;
+  border-radius: 5px;
+}
+.sidebar ul li a:hover,
+.sidebar ul li a.active {
+  background: #1abc9c;
+}
+
+/* This class is no longer used for collapsing the menu */
+/* .sidebar ul.collapsed { ... } */
+
+/* New styles for a fully collapsed sidebar */
+.sidebar.sidebar-collapsed {
+  width: 60px;
+  padding: 20px 0; /* Remove horizontal padding */
+  overflow: hidden;
+}
+
+.sidebar.sidebar-collapsed .sidebar-title-text,
+.sidebar.sidebar-collapsed ul {
+  opacity: 0;
+  pointer-events: none;
+  max-height: 0; /* Ensure menu is fully hidden */
+}
+
+.main-content {
+  margin-left: 250px;
+  padding: 20px;
+  transition: margin-left 0.4s ease, width 0.4s ease;
+}
+
+.main-content.sidebar-collapsed {
+  margin-left: 60px;
+}
+
+.main-content header {
+  text-align: center;
+  margin-bottom: 20px; /* Adds some space below the title */
+}
+
+.main-content header h1 {
+  color: white;
+}
+
+.container {
+  display: none;
+  background: transparent;
+  color: #000;
+  padding: 20px;
+  border-radius: 10px;
+}
+.active-section { display: block; }
+
+/* Content section styling (for Insurance Center, Tree Plantation, etc.) */
+.content-section {
+  padding: 20px 40px !important;
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+}
+
+.content-section .content-title {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 20px 0 8px 0;
+  color: #333;
+}
+
+.content-section .content-subtitle {
+  font-size: 16px;
+  color: #000;
+  margin: 0 0 20px 0;
+  line-height: 1.5;
+}
+
+.card {
+  background: #1abc9c;
+  color: white;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 10px;
+  text-align: center;
+}
+
+.dashboard-grid {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+#help-chatbox { position: fixed; bottom: 20px; right: 20px; }
+/* 💬 HELP CHATBOX - FINAL VERSION (Fixed, Scrollable, Animated) */
+#help-chatbox {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+}
+
+/* 💬 Chat Toggle Button */
+#chat-toggle {
+  background: #1abc9c;
+  border: none;
+  color: white;
+  font-size: 22px;
+  border-radius: 50%;
+  width: 55px;
+  height: 55px;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+  transition: all 0.25s ease;
+}
+
+#chat-toggle:hover {
+  transform: scale(1.1);
+  background: #16a085;
+}
+
+/* 🪟 Chat Window Box */
+#chat-window {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  width: 320px;
+  height: 440px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  z-index: 9999;
+  transform: translateY(20px);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+/* ✅ When Chatbox is Visible */
+#chat-window:not(.hidden) {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ❌ Hidden Class - Default State */
+.hidden {
+  display: none;
+}
+
+/* 🟩 Header Bar */
+#chat-header {
+  background: #1abc9c;
+  color: white;
+  padding: 12px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 15px;
+}
+
+#chat-close {
+  cursor: pointer;
+  color: #ff4d4d;
+  font-size: 18px;
+  font-weight: bold;
+  transition: 0.2s ease;
+}
+#chat-close:hover {
+  transform: scale(1.2);
+  color: #ff0000;
+}
+
+/* 🗨️ Chat Messages Container */
+#chat-messages {
+  flex: 1;
+  padding: 10px 12px;
+  overflow-y: auto;        /* ✅ Enables scroll */
+  scroll-behavior: smooth;
+  background: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 👤 User Messages */
+.user-message {
+  background: #1abc9c;
+  color: white;
+  padding: 8px 10px;
+  border-radius: 10px 10px 0 10px;
+  margin: 6px 0;
+  align-self: flex-end;
+  max-width: 80%;
+  word-wrap: break-word;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* 🤖 Bot Messages */
+.bot-message {
+  background: #ecf9f6;
+  color: #222;
+  padding: 8px 10px;
+  border-radius: 10px 10px 10px 0;
+  margin: 6px 0;
+  align-self: flex-start;
+  max-width: 80%;
+  word-wrap: break-word;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* per-reply play button */
+.bot-play-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  margin-right: 8px;
+  font-size: 16px;
+}
+.bot-play-btn:hover { transform: scale(1.1); }
+.bot-message .bot-text { vertical-align: middle; }
+
+/* voice button listening state */
+.listening { box-shadow: 0 0 8px #1abc9c inset; }
+
+/* ✏️ Chat Input Area */
+#chat-input-area {
+  display: flex;
+  align-items: center;
+  border-top: 1px solid #ccc;
+  background: #fff;
+  padding: 8px;
+  gap: 6px;
+}
+
+#chat-input {
+  flex: 1;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+  font-size: 14px;
+}
+
+#chat-input:focus {
+  border-color: #1abc9c;
+  box-shadow: 0 0 5px rgba(26, 188, 156, 0.3);
+}
+
+/* 🚀 Send Button */
+#send-btn {
+  background: #1abc9c;
+  border: none;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+}
+
+#send-btn:hover {
+  background: #16a085;
+  transform: scale(1.05);
+}
+
+/* === Logout: fixed top-right === */
+.logout-btn {
+  position: fixed !important;
+  top: 15px !important;
+  right: 20px !important;
+  background: #e74c3c !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 6px !important;
+  padding: 8px 14px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25) !important;
+  z-index: 2147483647 !important; /* Highest priority */
+}
+
+.logout-btn:hover {
+  background: #c0392b !important;
+  transform: scale(1.03) !important;
+}
+
+.pathway-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.pathway-card {
+  background: rgba(255, 255, 255, 0.95);
+  color: #000;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.pathway-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+}
+
+.pathway-card h3 {
+  color: #1abc9c;
+  margin-bottom: 10px;
+}
+
+/* Collapsible pathway-card (using <details>) */
+details.pathway-card {
+  padding: 14px 18px;
+}
+
+details.pathway-card summary {
+  list-style: none;
+  cursor: pointer;
+  outline: none;
+  display: block;
+  margin: 0;
+}
+
+details.pathway-card summary h3 {
+  color: #1abc9c;
+  margin: 0;
+  font-size: 18px;
+}
+
+details.pathway-card .pathway-body {
+  margin-top: 10px;
+}
+
+details.pathway-card[open] {
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+  transform: translateY(-4px);
+}
+
+/* Remove default marker for summary across browsers */
+details.pathway-card summary::-webkit-details-marker { display: none; }
+
+/* Keep card visible when collapsed and show a toggle icon */
+details.pathway-card {
+  background: rgba(255,255,255,0.95);
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.06);
+  overflow: hidden;
+  transition: max-height 0.28s ease, padding 0.22s ease, box-shadow 0.22s ease, transform 0.22s ease;
+}
+
+details.pathway-card summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* Toggle icon */
+details.pathway-card summary::after {
+  content: '+';
+  font-size: 20px;
+  color: #1abc9c;
+  font-weight: 700;
+}
+
+details.pathway-card[open] summary::after {
+  content: '−';
+}
+
+/* Ensure only the body content collapses */
+details.pathway-card .pathway-body { display: none; }
+details.pathway-card[open] .pathway-body { display: block; }
+
+/* Collapsed state: show only the slim header (like sidebar collapsed) */
+details.pathway-card:not([open]) {
+  max-height: 56px; /* small bar height */
+  padding: 8px 12px; /* reduce padding when collapsed */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  transform: none;
+}
+
+/* Expanded state: allow full content */
+details.pathway-card[open] {
+  max-height: 1000px; /* large enough to show content */
+  padding: 14px 18px;
+}
+
+.pathway-card ul {
+  margin-left: 18px;
+  font-size: 0.95em;
+  line-height: 1.4;
+}
+
+.simulate-btn {
+  margin-top: 10px;
+  background: #1abc9c;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.simulate-btn:hover {
+  background: #15967d;
+}
+
+#pathway-result {
+  margin-top: 25px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 10px;  
+  color: #000;
+  display: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.form-group {
+  margin-bottom: 12px;
+}
+
+.form-group label {
+  font-weight: bold;
+  display: block;
+}
+
+.result-box {
+  margin-top: 15px;
+  padding: 10px;
+  background: rgba(255,255,255,0.9);
+  color: #000;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.result-box {
+  margin-top: 15px;
+  padding: 12px;
+  background: rgba(255,255,255,0.9);
+  color: #000;
+  border-radius: 10px;
+  line-height: 1.6;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+}
+
+
+/* Compact styling for Carbon Sinks section to reduce scrolling */
+/* Improved compact but readable Carbon Sinks layout: medium font, two-column where possible */
+#carbon-sinks.container {
+  padding: 10px 12px; /* small padding */
+  font-size: 16px; /* slightly larger for readability */
+}
+
+#carbon-sinks h2 {
+  font-size: 24px; /* increased for better readability */
+  margin-top: 8px;
+  margin-bottom: 10px;
+}
+
+#carbon-sinks p {
+  font-size: 16px;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+/* Make form rows compact and align label+control in two columns */
+#carbon-sinks .form-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+#carbon-sinks .form-group label {
+  width: 45%;
+  margin: 0;
+  font-size: 16px;
+}
+
+#carbon-sinks .form-group input,
+#carbon-sinks .form-group select {
+  width: 55%;
+  padding: 8px 10px;
+  font-size: 16px;
+  height: 40px;
+  box-sizing: border-box;
+}
+
+#carbon-sinks button {
+  padding: 8px 12px;
+  font-size: 15px;
+}
+
+#carbon-sinks .result-box {
+  padding: 10px;
+  font-size: 16px;
+}
+
+#carbon-sinks .predict-box {
+  padding: 8px;
+}
+
+#carbon-sinks .summary-box {
+  padding: 10px;
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+/* Responsive: stack fields on narrow screens */
+@media (max-width: 880px) {
+  #carbon-sinks .form-group { flex-direction: column; align-items: stretch; }
+  #carbon-sinks .form-group label { width: 100%; margin-bottom: 6px; }
+  #carbon-sinks .form-group input, #carbon-sinks .form-group select { width: 100%; }
+}
+
+/* Match Emission Input sizing with Carbon Sinks detailed box */
+#emission-input.container {
+  padding: 10px 12px;
+  font-size: 15px;
+}
+
+#emission-input h2 {
+  font-size: 24px; /* increased to match Carbon Sinks heading */
+  margin-top: 8px;
+  margin-bottom: 10px;
+}
+
+#emission-input p {
+  font-size: 15px;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+#emission-input .form-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+#emission-input .form-group label {
+  width: 45%;
+  margin: 0;
+  font-size: 15px;
+}
+
+#emission-input .form-group input,
+#emission-input .form-group select {
+  width: 55%;
+  padding: 8px 10px;
+  font-size: 15px;
+  height: 40px;
+  box-sizing: border-box;
+}
+
+#emission-input button {
+  padding: 8px 12px;
+  font-size: 15px;
+}
+
+#emission-input .result-box {
+  padding: 10px;
+  font-size: 15px;
+}
+
+@media (max-width: 880px) {
+  #emission-input .form-group { flex-direction: column; align-items: stretch; }
+  #emission-input .form-group label { width: 100%; margin-bottom: 6px; }
+  #emission-input .form-group input, #emission-input .form-group select { width: 100%; }
+}
+
+#downloadReport {
+  background-color: #1abc9c;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  font-size: 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 15px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+}
+#downloadReport:hover {
+  background-color: #15967d;
+}
+
+.mine-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.mine-card {
+  background: rgba(255, 255, 255, 0.95);
+  color: rgba(255, 255, 255, 0.95);
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+  line-height: 1.6;
+  transition: transform 0.2s ease;
+}
+.mine-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.summary-box {
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  padding: 15px;
+  margin-top: 25px;
+  border-radius: 10px;
+  line-height: 1.8;
+}
+.summary-box h3 {
+  color: #00ff99;
+}
+
+.info-overview, .data-summary {
+  background: rgba(255,255,255,0.9);
+  color: #000;
+  padding: 15px 20px;
+  border-radius: 10px;
+  margin-top: 15px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Carbon credits form inside info-overview */
+.cc-form { display: block; }
+.cc-form .form-group { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+.cc-form .form-group label { width: 45%; margin: 0; font-size: 15px; font-weight: 700; }
+.cc-form .form-group input, .cc-form .form-group select { width: 55%; padding: 8px 10px; font-size: 15px; height: 40px; box-sizing: border-box; border-radius: 6px; border: 1px solid #ccc; }
+.cc-form .form-group button { width: 55%; background: #1abc9c; color: #fff; border:none; padding: 10px 12px; border-radius: 6px; cursor: pointer; }
+.cc-form .form-group button:hover { background: #15967d; }
+
+@media (max-width: 880px) {
+  .cc-form .form-group { flex-direction: column; align-items: stretch; }
+  .cc-form .form-group label { width: 100%; margin-bottom: 6px; }
+  .cc-form .form-group input, .cc-form .form-group select, .cc-form .form-group button { width: 100%; }
+}
+
+.info-overview h3, .data-summary h3 {
+  color: #0a5;
+}
+
+.mine-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.mine-table th, .mine-table td {
+  border: 1px solid #ccc;
+  padding: 8px;  
+  text-align: left;
+}
+
+.mine-table th {
+  background: #eee;
+  color: #000;
+}
+
+.mine-table tr:nth-child(even) {
+  background: #f2f2f2;
+}
+
+/* Mine cards with accordion in Mines Information section */
+.mine-card {
+  border-radius: 10px;
+  margin-bottom: 15px;
+  background: #1cb898;
+  padding: 10px;
+  transition: all 0.3s;
+}
+
+.mine-header {
+  font-weight: bold;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 10px;
+}
+
+.mine-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+  padding-left: 10px;
+}
+
+.mine-card.open .mine-content {
+  max-height: 500px;
+}
+
+/* 🌍 LOGIN PAGE STYLING */
+.login-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)),
+              url('https://images.pexels.com/photos/2101137/pexels-photo-2101137.jpeg')
+              no-repeat center center/cover;
+  font-family: "Segoe UI", sans-serif;
+  margin: 0;
+}
+
+/* Login Box */
+.login-box {
+  background: rgba(255, 255, 255, 0.15); /* semi-transparent */
+  padding: 40px 48px;
+  border-radius: 12px;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+  width: 340px;
+  text-align: center;
+  backdrop-filter: blur(10px); /* ✨ Frosted glass effect */
+  color: #fff;
+}
+
+/* Heading */
+.login-box h2 {
+  font-size: 34px;
+  color: #ffffff;
+  margin-bottom: 25px;
+  font-weight: bold;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+/* Inputs */
+.login-box input {
+  width: 100%;
+  padding: 14px;
+  margin: 12px 0;
+  border: 2px solid #00e6b8;
+  border-radius: 8px;
+  outline: none;
+  font-size: 16px;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  transition: 0.3s;
+}
+
+.login-box input::placeholder {
+  color: #e0e0e0;
+}
+
+.login-box input:focus {
+  border-color: #00ffff;
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.6);
+}
+
+/* Button */
+.login-box button {
+  background: #00bcd4;
+  border: none;
+  color: white;
+  padding: 14px 0;
+  border-radius: 8px;
+  width: 100%;
+  font-size: 18px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: 0.3s;
+}
+
+.login-box button:hover {
+  background: #0097a7;
+}
+
+/* Error Message */
+#error {
+  margin-top: 15px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #ffb3b3;
+}
+
+/* === New Map Layout Grid === */
+.map-layout-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr; /* Left column for controls, right for map */
+  gap: 10px; /* reduced gap to pull map + register closer */
+  align-items: stretch; /* stretch columns so map matches register column height */
+}
+
+.map-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* === Map controls & list === */
+.map-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  flex-direction: column; /* Stack search and select vertically */
+  width: 100%;
+}
+
+#mapSearch {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.mine-select {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* Ensure search input and select have identical sizing */
+.map-controls input,
+.map-controls select,
+.mine-select {
+  box-sizing: border-box;
+  height: 40px;
+  font-size: 14px;
+  line-height: 1.1;
+}
+
+#mine-map h2 { margin-top: 6px; margin-bottom: 6px; }
+
+/* Map container: slightly reduced height to reduce page length and reflows */
+#indiaMap {
+  height: 550px; /* restored to previous size */
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  margin-top: 8px; /* small top gap to separate heading */
+  max-width: 100%;
+}
+
+/* Register form styles */
+.register-box {
+  margin-top: 0; /* No longer needed with grid layout */
+  background: rgba(255,255,255,0.95); padding: 12px; border-radius: 8px;
+}
+.register-box h3 { margin: 0 0 8px 0; color: #111; }
+.register-form { display: flex; flex-direction: column; gap: 8px; }
+.register-form input, .register-form select { padding: 8px 10px; border-radius: 6px; border: 1px solid #ccc; }
+.register-form button { background: #1abc9c; color: #fff; border:none; padding: 8px 12px; border-radius: 6px; cursor: pointer; }
+.register-msg { margin-top: 6px; font-size: 0.95em; color: #2c7; }
+
+/* delete button in mine list */
+.mine-delete {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85em;
+}
+.mine-delete:hover { background: #c0392b; }
+
+/* Mines Directory styles */
+.directory-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.directory-controls input, .directory-controls select {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: #fff;
+  color: #000;
+}
+.directory-table-wrap { overflow-x: auto; background: rgba(255,255,255,0.95); padding: 10px; border-radius: 8px; }
+#dirTable { width: 100%; border-collapse: collapse; }
+#dirTable th, #dirTable td { border: 1px solid #ddd; padding: 8px; text-align: left; color: #000; }
+#dirTable th { background: #f4f4f4; }
+.dir-pager { margin-top: 10px; }
+.dir-page-btn { margin-right: 6px; padding: 6px 10px; border-radius: 6px; border: 1px solid #ccc; background: #fff; cursor: pointer; }
+.dir-page-btn.active { background: #1abc9c; color: #fff; border-color: #15967d; }
+.dir-action-btn { padding: 6px 8px; border-radius: 6px; border: none; background: #1abc9c; color: #fff; cursor: pointer; }
+.dir-action-btn:hover { background: #15967d; }
+
+/* Popup image styling */
+.popup-image {
+  display: block;
+  max-width: 320px;
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+.popup-content { font-size: 14px; line-height: 1.4; }
+
+/* Compact Reports section to avoid vertical scrolling */
+/* Reports: modestly increase chart size while keeping page scroll minimal */
+#reports.container {
+  padding: 0 8px 6px 8px; /* remove top padding to pull content upward */
+  margin-top: -40px; /* slightly less shift to keep page height stable */
+  position: relative;
+  top: -4px; /* small nudge upward */
+  font-size: 17px;  /* modestly larger for readability */
+  z-index: 2;
+  max-height: calc(100vh - 80px);
+  overflow: visible;
+}
+
+#reports h2 {
+  font-size: 24px; /* keep heading size */
+  margin: 48px 0 6px 0;
+}
+
+#reports p {
+  font-size: 16px; /* slightly reduced to compensate for larger charts */
+  margin: 0 0 6px 0;
+  line-height: 1.28;
+}
+
+/* Use fixed/responsive canvas heights to avoid layout jumps when charts initialize */
+/* Increased chart heights to use more downward space */
+#emissionChart { width: 100%; height: 360px !important; display: block; }
+#trendChart { width: 100%; height: 360px !important; display: block; }
+#reports canvas { width: 100%; max-height: 420px; margin-top: 12px; margin-bottom: 10px; }
+
+/* Ensure html/body allow normal scrolling but avoid forced jumps */
+html, body { height: 100%; overflow-y: auto; }
+
+/* Make download button smaller and inline */
+#reports #downloadReport {
+  padding: 8px 10px;
+  font-size: 18px; /* increase button font size to match section */
+  margin-top: 0; /* align closely with graphs */
+  display: inline-block;
+}
+
+/* Reduce extra vertical spacing for the whole section */
+#reports .result-box, #reports .predict-box {
+  padding: 8px;
+  margin-top: 8px;
+}
+
+/* Carbon Credits UI styles */
+.cc-form #saveCreditBtn {
+  background: #1abc9c;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.cc-form #saveCreditBtn:hover { background: #15967d; }
+
+#creditsTable { width: 100%; border-collapse: collapse; }
+#creditsTable th, #creditsTable td { padding: 8px; border: 1px solid #ddd; text-align: left; }
+#creditsTable thead th { background: #f4f4f4; }
+
+#ccWallet { font-weight: 800; color: #0a5; }
+#ccTotalBadge { background: #fffae6; padding: 4px 8px; border-radius: 6px; font-weight:700; }
+
+/* Mine Wallet Table Styling */
+.mine-wallet-table {
+  margin-top: 20px;
+}
+
+.mine-wallet-table h3 {
+  margin-bottom: 12px;
+  color: #333;
+  font-weight: 600;
+}
+
+.mine-wallet-table table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.mine-wallet-table th,
+.mine-wallet-table td {
+  border: 1px solid #ddd;
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.mine-wallet-table th {
+  background: #f4f6f8;
+  font-weight: 600;
+  color: #333;
+}
+
+.mine-wallet-table td {
+  color: #555;
+}
+
+.mine-wallet-table tbody tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+
+.mine-wallet-table tbody tr:hover {
+  background: #f0f8ff;
+}
+
+/* Scrollable wallet table container */
+.wallet-table-scroll {
+  max-height: 260px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.wallet-table-scroll table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+/* Sticky header stays visible while scrolling */
+.wallet-table-scroll thead th {
+  position: sticky;
+  top: 0;
+  background: #f4f6f8;
+  font-weight: 600;
+  color: #333;
+  z-index: 1;
+}
+
+/* Custom scrollbar styling */
+.wallet-table-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.wallet-table-scroll::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.wallet-table-scroll::-webkit-scrollbar-thumb {
+  background: #c1c7cd;
+  border-radius: 4px;
+}
+
+.wallet-table-scroll::-webkit-scrollbar-thumb:hover {
+  background: #a8afb8;
+}
+
+#certificate-div { box-shadow: 0 3px 8px rgba(0,0,0,0.18); }
+/* Small responsive tweaks for carbon credit controls */
+@media (max-width: 880px) {
+  #ccSellPrice { width: 100%; }
+}
+
+/* Horizontal layout for carbon credit filters */
+.cc-form .cc-filters {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: nowrap; /* keep controls on one line */
+}
+.cc-form .cc-filters input#ccFilterProject { min-width: 200px; max-width: 360px; }
+
+@media (max-width: 880px) {
+  .cc-form .cc-filters { flex-wrap: wrap; }
+  .cc-form .cc-filters input#ccFilterProject { width: 100%; }
+}
+
+.cc-form .cc-sections { display: flex; gap: 18px; align-items: flex-start; }
+.cc-form .cc-calc { flex: 1; min-width: 260px; }
+.cc-form .cc-rest { flex: 1; min-width: 300px; }
+
+/* Ensure the Carbon Credits panel fits the viewport without growing the page.
+   The overall section will be constrained and inner columns will scroll if needed. */
+#carbon-credits { 
+  margin-top: -28px; /* pull section closer to header to reduce page length */
+}
+
+#carbon-credits .info-overview {
+  max-height: calc(100vh - 140px); /* reduce reserved space so section sits higher */
+  overflow: visible; /* allow inner panels to scroll without being clipped */
+  padding-top: 6px;
+}
+.cc-form { height: 100%; box-sizing: border-box; }
+.cc-form .cc-sections { display: flex; gap: 18px; align-items: stretch; height: 100%; }
+.cc-form .cc-calc, .cc-form .cc-rest {
+  flex: 1;
+  min-width: 260px;
+  overflow: auto; /* scroll internally if content exceeds available height */
+  padding-right: 8px;
+}
+
+/* Scrollable right-side carbon credits panel */
+#carbon-credits .cc-rest,
+.carbon-panel,
+.right-panel,
+.content-box {
+  max-height: 520px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+/* Optional scrollbar styling for the panel */
+#carbon-credits .cc-rest::-webkit-scrollbar,
+.carbon-panel::-webkit-scrollbar,
+.right-panel::-webkit-scrollbar,
+.content-box::-webkit-scrollbar {
+  width: 8px;
+}
+
+#carbon-credits .cc-rest::-webkit-scrollbar-thumb,
+.carbon-panel::-webkit-scrollbar-thumb,
+.right-panel::-webkit-scrollbar-thumb,
+.content-box::-webkit-scrollbar-thumb {
+  background: #c1c7cd;
+  border-radius: 4px;
+}
+
+.credits-table-wrap { margin-top: 8px; overflow: auto; max-height: calc(100vh - 360px); background: rgba(255,255,255,0.96); padding: 8px; border-radius: 8px; }
+.wallet-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.wallet-row .spacer { margin-left: auto; }
+.cc-trade { margin-top: 12px; }
+.cc-filter { margin-top: 12px; }
+#certificate-div { display:none; margin-top:12px; padding:12px; background:#fff; border-radius:8px; color:#000; }
+#certificate-div { box-shadow: 0 3px 8px rgba(0,0,0,0.18); }
+
+/* Certificate styling */
+#certificate-div { padding: 18px; background: #fff; color: #111; }
+#certificate-div .cert-header h2 { margin: 0 0 6px 0; font-size: 20px; color: #0a5; }
+#certificate-div .cert-header p { margin: 0 0 8px 0; font-size: 0.9em; color: #444; }
+#certificate-div h3 { margin: 6px 0 8px 0; font-size: 18px; }
+#certificate-div #certStatement { margin: 6px 0 10px 0; color: #222; }
+#certificate-div #certCalculations h4 { margin: 6px 0; }
+#certificate-div #certBreakdown { margin-left: 14px; }
+#certificate-div #certProductionInfo { font-size: 0.95em; color: #333; }
+#certificate-div #certAppreciation { margin-top: 12px; font-style: italic; color: #222; }
+#certificate-div #certFooter { margin-top: 18px; display:flex; justify-content:space-between; align-items:center; }
+#certificate-div #certFooter p { margin: 0; }
+#certificate-div #certFooter .cert-issuer { font-weight: 700; }
+#certificate-div #certQr { margin-top: 12px; font-size: 12px; color: #333; }
+#certQr { margin-top:8px; font-size:12px; color:#333; }
+
+/* Toast / notification styles */
+#toast-container {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.toast {
+  background: rgba(0,0,0,0.85);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 8px;
+  min-width: 220px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  font-size: 14px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+.toast.success { background: #27ae60; }
+.toast.error { background: #e74c3c; }
+.toast.info { background: #34495e; }
+
+@media (max-width: 980px) {
+  .cc-form .cc-sections { flex-direction: column; }
+}
+
+/* trade controls layout */
+.trade-controls { display:flex; gap:8px; margin-top:12px; align-items:center; flex-wrap:wrap; }
+.trade-controls .spacer { margin-left:auto; }
+
+/* Advanced Features: hamburger submenu */
+.submenu { margin-left: 12px; padding-left: 6px; max-height: 0; overflow: hidden; transition: max-height 260ms ease; }
+.hamburger-icon { cursor: pointer; font-weight: bold; color: #fff; display: block; padding: 8px 10px; }
+.hamburger-menu .submenu li { padding: 6px 8px; color: #fff; cursor: pointer; }
+.hamburger-menu .submenu li:hover { background: rgba(255,255,255,0.06); border-radius: 6px; }
+
+/* Animated reveal for Advanced Features submenu items */
+.hamburger-menu .submenu { max-height: 0; overflow: hidden; transition: max-height 260ms ease; }
+.hamburger-menu .submenu li { opacity: 0; transform: translateX(-10px); transition: transform 260ms cubic-bezier(.2,.9,.3,1), opacity 260ms cubic-bezier(.2,.9,.3,1); }
+.hamburger-menu.open .submenu { max-height: 500px; }
+.hamburger-menu .submenu li.show { opacity: 1; transform: translateX(0); }
+
+/* Before/After slider */
+.before-after-wrap { position: relative; max-width: 100%; overflow: hidden; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.12); aspect-ratio: 16 / 7; }
+/* keep the 'before' image in normal flow so container gets height from it */
+.before-after-wrap .ba-before { position: relative; width: 100%; height: 100%; }
+.before-after-wrap .ba-before img { display: block; width: 100%; height: 100%; object-fit: cover; }
+/* the 'after' overlay sits above and is clipped by width */
+.before-after-wrap .ba-after { position: absolute; top: 0; left: 0; height: 100%; width: 50%; overflow: hidden; }
+.before-after-wrap .ba-after img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.before-after-wrap input[type=range] { position: relative; width: 100%; margin-top: 8px; }
+
+/* slider handle and overlay visuals */
+.ba-handle { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 4px; height: 100%; background: rgba(255,255,255,0.95); box-shadow: 0 0 0 2px rgba(0,0,0,0.08); z-index: 40; border-radius: 2px; }
+.ba-handle::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 18px; height: 18px; background: #fff; border-radius: 50%; box-shadow: 0 2px 6px rgba(0,0,0,0.25); }
+
+/* style the range input to act as an invisible controller placed over the area */
+.before-after-wrap input[type=range] {
+  position: absolute; left: 0; bottom: 8px; z-index: 45; width: 100%; -webkit-appearance: none; appearance: none; background: transparent; height: 28px; pointer-events: auto;
+}
+.before-after-wrap input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 0; height: 0; }
+.before-after-wrap input[type=range]:focus { outline: none; }
+
+/* small visual rail near bottom to hint control (visible) */
+.before-after-wrap::after { content: ''; position: absolute; left: 6%; right: 6%; bottom: 14px; height: 4px; background: rgba(255,255,255,0.18); border-radius: 4px; z-index: 30; }
+.before-after-wrap::before { content: ''; position: absolute; left: 6%; right: 6%; bottom: 14px; height: 2px; background: rgba(0,0,0,0.12); border-radius: 4px; z-index: 29; }
+
+/* Auction House */
+.auction-panel { background: rgba(255,255,255,0.95); padding: 12px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.auction-price { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
+.auction-controls { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
+.auction-bidders { margin-top: 8px; }
+.auction-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px; margin-top: 12px; }
+.auction-card { background: rgba(255,255,255,0.95); padding: 10px; border-radius: 8px; box-shadow: 0 3px 10px rgba(0,0,0,0.07); }
+.auction-card h3 { margin: 0 0 6px 0; }
+.auction-card-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+.auction-totals { display: flex; gap: 12px; font-size: 13px; color: #333; }
+.auction-totals strong { color: #000; }
+
+/* Revenue Analyzer removed - styles deprecated */
+
+/* Badges Grid */
+.badges-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap:12px; margin-top: 12px; }
+.badge { background: rgba(255,255,255,0.95); padding:10px; border-radius:8px; text-align:center; color:#444; box-shadow: 0 3px 8px rgba(0,0,0,0.08); }
+.badge.locked { filter: grayscale(100%); opacity: 0.6; }
+.badge img { width: 64px; height: 64px; display:block; margin: 0 auto 8px auto; }
+
+/* Compact Badges Table (new) */
+.badges-table-wrap { margin-top: 12px; overflow-x: auto; background: rgba(255,255,255,0.95); padding: 8px; border-radius: 8px; }
+.badges-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.badges-table thead th { text-align: left; padding: 8px 10px; background: #f4f4f4; border-bottom: 1px solid #e0e0e0; }
+.badges-table tbody td { padding: 8px 10px; border-bottom: 1px solid #eee; color: #111; }
+.badges-table tbody tr:nth-child(even) { background: rgba(0,0,0,0.02); }
+
+/* Badge type color chips (no images) */
+.badge-type { display: inline-block; padding: 6px 10px; border-radius: 999px; color: #000; font-weight: 700; font-size: 13px; }
+.badge-type--sink { background: #d8f8e0; color: #0a5; } /* green for carbon sink */
+.badge-type--credits { background: #fff6d8; color: #a66a00; } /* yellow for credits earned */
+.badge-type--auction { background: #ffd6d6; color: #a00; } /* red for auction badges */
+
+/* Details column: smaller muted text */
+.badges-table .muted { color: #444; font-size: 13px; }
+
+@media (max-width: 720px) {
+  .badges-table thead th { font-size: 13px; }
+  .badges-table tbody td { font-size: 13px; padding: 8px; }
+}
+
+/* Collapsible table headings */
+.badges-table-wrap h3.collapsible { cursor: pointer; margin: 0 0 8px 0; padding: 6px 4px; font-size: 16px; display: block; }
+.badges-table-wrap h3.collapsible:focus { outline: 2px solid rgba(26,188,156,0.4); }
+.badges-table-wrap h3.collapsible::after { content: '▾'; float: right; transition: transform 180ms ease; }
+.badges-table-wrap.collapsed h3.collapsible::after { transform: rotate(-90deg); }
+.badges-table-wrap.collapsed table { display: none; }
+
+/* Climate Impact section ruled removed per user request */
+
+/* ============ Tree Plantation Donation System Styles ============ */
+.tree-donation-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.donation-form-box,
+.donation-stats-box,
+.badges-display-box,
+.recent-donations-box {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.donation-form-box h3,
+.donation-stats-box h3,
+.badges-display-box h3,
+.recent-donations-box h3 {
+  margin: 0 0 12px 0;
+  font-size: 18px;
+  color: #1abc9c;
+  border-bottom: 2px solid #1abc9c;
+  padding-bottom: 8px;
+}
+
+/* Form inputs */
+.form-group-inline {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+}
+
+.form-group-inline label {
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #333;
+  font-size: 13px;
+}
+
+.donation-select,
+.donation-input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.donation-select:focus,
+.donation-input:focus {
+  outline: none;
+  border-color: #1abc9c;
+  box-shadow: 0 0 4px rgba(26, 188, 156, 0.3);
+}
+
+.wallet-display {
+  padding: 10px;
+  background: #f5f5f5;
+  border-radius: 6px;
+  font-weight: 700;
+  color: #1abc9c;
+  font-size: 16px;
+}
+
+/* Donate button */
+.donate-button {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #1abc9c, #16a085);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin-top: 8px;
+}
+
+.donate-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(26, 188, 156, 0.4);
+}
+
+.donate-button:active {
+  transform: translateY(0);
+}
+
+/* Reset button variant */
+.donate-button.donate-reset {
+  background: linear-gradient(135deg, #f44336, #d32f2f);
+  box-shadow: 0 2px 10px rgba(244, 67, 54, 0.35);
+}
+
+.donate-button.donate-reset:hover {
+  box-shadow: 0 4px 14px rgba(244, 67, 54, 0.45);
+}
+
+/* Collapsible sections for donation area */
+.collapsible-header {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.collapsible-header::after {
+  content: '▾';
+  font-size: 14px;
+  color: #555;
+}
+
+.collapsed .collapsible-header::after {
+  content: '▸';
+}
+
+.collapsible-content {
+  display: block;
+}
+
+.collapsed .collapsible-content {
+  display: none;
+}
+
+/* Achievement accordions (reuse mines info style) */
+.ach-accordion {
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.06);
+  padding: 0;
+  overflow: hidden;
+}
+
+.ach-header {
+  padding: 14px 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #3ce5c3, #15967d);
+  border-bottom: 1px solid #e5e8ee;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.ach-header:hover {
+  background: linear-gradient(135deg, #eef2f7, #e6ebf3);
+  color: #0f766e;
+}
+
+.ach-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+  padding: 0 16px;
+}
+
+.ach-accordion.open .ach-content {
+  max-height: 1000px;
+}
+
+/* Messages */
+.donation-message {
+  margin-top: 8px;
+  font-size: 13px;
+  padding: 8px;
+  border-radius: 4px;
+  text-align: center;
+  min-height: 20px;
+}
+
+.donation-message.success {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.donation-message.error {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.donation-message.info {
+  background: #d1ecf1;
+  color: #0c5460;
+  border: 1px solid #bee5eb;
+}
+
+/* Stats */
+.stats-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.stat-item {
+  background: #f9f9f9;
+  padding: 12px;
+  border-radius: 6px;
+  text-align: center;
+  border-left: 4px solid #1abc9c;
+}
+
+.stat-label {
+  margin: 0;
+  font-size: 12px;
+  color: #666;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.stat-value {
+  margin: 4px 0 0 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1abc9c;
+}
+
+/* Progress bar */
+.progress-section {
+  margin-top: 16px;
+}
+
+.progress-label {
+  margin: 0 0 6px 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 24px;
+  background: #e9ecef;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #1abc9c, #16a085);
+  width: 0%;
+  transition: width 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.progress-text {
+  margin: 6px 0 0 0;
+  font-size: 12px;
+  color: #666;
+  text-align: right;
+}
+
+/* Badge row */
+.badge-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+@media (max-width: 768px) {
+  .badge-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.badge-item {
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+  border: 2px solid #e9ecef;
+  transition: all 0.3s ease;
+  opacity: 0.5;
+  filter: grayscale(100%);
+}
+
+.badge-item.unlocked {
+  opacity: 1;
+  filter: grayscale(0%);
+  border-color: #1abc9c;
+  background: rgba(26, 188, 156, 0.1);
+}
+
+.badge-icon {
+  font-size: 40px;
+  margin-bottom: 8px;
+}
+
+.badge-label {
+  margin: 0;
+  font-weight: 700;
+  font-size: 13px;
+  color: #333;
+}
+
+.badge-threshold {
+  margin: 4px 0 0 0;
+  font-size: 12px;
+  color: #999;
+}
+
+.badge-item.unlocked .badge-threshold {
+  color: #1abc9c;
+  font-weight: 600;
+}
+
+/* Recent donations list */
+.recent-list {
+  margin-top: 12px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.recent-item {
+  background: #f9f9f9;
+  padding: 10px;
+  border-left: 3px solid #1abc9c;
+  margin-bottom: 8px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.recent-item-mine {
+  font-weight: 600;
+  color: #333;
+}
+
+.recent-item-amount {
+  color: #1abc9c;
+  font-weight: 700;
+}
+
+.recent-item-date {
+  color: #999;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.empty-state {
+  text-align: center;
+  color: #999;
+  font-style: italic;
+  padding: 20px 0;
+  margin: 0;
+}
+/* ============ Insurance Center Styles ============ */
+.insurance-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.insurance-mine-selector {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.insurance-mine-selector label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+  font-size: 14px;
+}
+
+.insurance-select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.insurance-select:focus {
+  outline: none;
+  border-color: #1abc9c;
+  box-shadow: 0 0 4px rgba(26, 188, 156, 0.3);
+}
+
+.insurance-summary {
+  background: linear-gradient(135deg, #e8f5f3, #d1ebe7);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid #1abc9c;
+}
+
+.insurance-summary h3 {
+  margin: 0 0 12px 0;
+  font-size: 18px;
+  color: #0f766e;
+}
+
+.insurance-summary p {
+  margin: 6px 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.insurance-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.insurance-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.insurance-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.insurance-card-header {
+  background: linear-gradient(135deg, #f8fafc, #eef2f7);
+  padding: 16px;
+  border-bottom: 2px solid #e5e8ee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.insurance-card-header h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #1e293b;
+}
+
+.insurance-status {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.insurance-status.not-purchased {
+  background: #fee;
+  color: #c53030;
+}
+
+.insurance-status.active {
+  background: #d1fae5;
+  color: #047857;
+}
+
+.insurance-card-body {
+  padding: 16px;
+}
+
+.insurance-price {
+  margin: 0 0 12px 0;
+  font-size: 15px;
+  color: #555;
+}
+
+.insurance-price strong {
+  color: #1abc9c;
+  font-size: 18px;
+}
+
+.insurance-covers {
+  margin: 12px 0 6px 0;
+  font-weight: 600;
+  font-size: 13px;
+  color: #333;
+}
+
+.insurance-card-body ul {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 13px;
+  color: #555;
+  line-height: 1.6;
+}
+
+.insurance-card-body ul li {
+  margin: 4px 0;
+}
+
+.insurance-card-footer {
+  padding: 16px;
+  background: #fafbfc;
+  border-top: 1px solid #e5e8ee;
+}
+
+.insurance-buy-btn {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #1abc9c, #16a085);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.insurance-buy-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(26, 188, 156, 0.4);
+}
+
+.insurance-buy-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.insurance-buy-btn:disabled {
+  background: linear-gradient(135deg, #94a3b8, #64748b);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+@media (max-width: 768px) {
+  .insurance-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============ Insurance Center Active State ============ */
+.insurance-summary p {
+  margin: 6px 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.insurance-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.insurance-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.insurance-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.insurance-card-header {
+  background: linear-gradient(135deg, #f8fafc, #eef2f7);
+  padding: 16px;
+  border-bottom: 2px solid #e5e8ee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.insurance-card-header h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #1e293b;
+}
+
+.insurance-status {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.insurance-status.not-purchased {
+  background: #fee;
+  color: #c53030;
+}
+
+.insurance-status.active {
+  background: #d1fae5;
+  color: #047857;
+}
+
+.insurance-card-body {
+  padding: 16px;
+}
+
+.insurance-price {
+  margin: 0 0 12px 0;
+  font-size: 15px;
+  color: #555;
+}
+
+.insurance-price strong {
+  color: #1abc9c;
+  font-size: 18px;
+}
+
+.insurance-covers {
+  margin: 12px 0 6px 0;
+  font-weight: 600;
+  font-size: 13px;
+  color: #333;
+}
+
+.insurance-card-body ul {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 13px;
+  color: #555;
+  line-height: 1.6;
+}
+
+.insurance-card-body ul li {
+  margin: 4px 0;
+}
+
+.insurance-card-footer {
+  padding: 16px;
+  background: #fafbfc;
+  border-top: 1px solid #e5e8ee;
+}
+
+.insurance-buy-btn {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #1abc9c, #16a085);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.insurance-buy-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(26, 188, 156, 0.4);
+}
+
+.insurance-buy-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.insurance-buy-btn:disabled {
+  background: linear-gradient(135deg, #94a3b8, #64748b);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+@media (max-width: 768px) {
+  .insurance-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============ Insurance Center Fixed Layout ============ */
+/* Ensure Insurance Center respects active-section visibility */
+section#insurance-center:not(.active-section),
+section#insurance-center:not(.active-section) * { 
+  display: none !important; 
+  visibility: hidden !important;
+}
+section#insurance-center.active-section { display: block !important; visibility: visible !important; }
+section#insurance-center.active-section .insurance-panel { display: flex !important; }
+#insurance-center { padding: 10px 30px !important; }
+#insurance-center h2 { 
+  text-align: left; 
+  margin-bottom: 20px; 
+  color: #000;
+  font-size: 28px;
+  font-weight: 700;
+  margin-top: 0;
+}
+.insurance-grid, #insurance-center .insurance-cards-grid { display: grid !important; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)) !important; gap: 20px !important; width: 100% !important; max-width: 1200px !important; margin: 0 auto !important; padding: 20px 0 !important; }
+#insurance-center .insurance-card { background: #fff !important; border-radius: 12px !important; padding: 0 !important; box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15) !important; border: 1px solid #e0e0e0 !important; overflow: hidden !important; width: 100% !important; box-sizing: border-box !important; position: relative !important; float: none !important; display: block !important; margin: 0 !important; }
+#insurance-center .insurance-card button, #insurance-center .insurance-buy-btn { width: 100% !important; margin-top: 12px !important; box-sizing: border-box !important; }
+@media (max-width: 768px) { .insurance-grid, #insurance-center .insurance-cards-grid { grid-template-columns: 1fr !important; } #insurance-center { padding: 10px 15px !important; } }
+
+/* Ensure Insurance Center respects active-section visibility */
+/* Insurance Accordion Styles */
+.ins-accordion-header {
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.ins-accordion-header:hover {
+  background-color: rgba(26, 188, 156, 0.05);
+}
+
+.ins-accordion-header h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-size: 16px;
+}
+
+.ins-arrow {
+  display: inline-block;
+  transition: transform 0.35s ease;
+  font-size: 14px;
+}
+
+.insurance-card.open .ins-arrow {
+  transform: rotate(180deg);
+}
+
+.ins-accordion-content {
+  max-height: 1000px;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+}
+
+.insurance-card:not(.open) .ins-accordion-content {
+  max-height: 0;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  overflow: hidden;
+}
+
+/* Insurance Plans Table Styles */
+.insurance-accordion {
+  background: #ffffff;
+  border-radius: 10px;
+  margin-top: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.insurance-accordion-header {
+  padding: 14px 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.insurance-accordion-header .accordion-arrow {
+  font-size: 14px;
+}
+
+.insurance-accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+  padding: 0 16px;
+}
+
+.insurance-accordion.open .insurance-accordion-content {
+  padding: 0 16px 16px;
+}
+
+.insurance-plans-section {
+  margin-top: 40px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.insurance-plans-section h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 18px;
+}
+
+.insurance-plans-wrapper {
+  overflow-x: auto;
+}
+
+.insurance-plans-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.insurance-plans-table thead {
+  background: linear-gradient(135deg, #1abc9c, #16a085);
+  color: white;
+}
+
+.insurance-plans-table th {
+  padding: 12px 15px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.insurance-plans-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 13px;
+}
+
+.insurance-plans-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.insurance-plans-table tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+.insurance-plans-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.insurance-plans-empty td {
+  text-align: center;
+  padding: 20px 15px;
+  color: #999;
+  font-style: italic;
+}
+
+/* Status Badge Styles */
+.plan-status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.plan-status-active {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.plan-status-expiring {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.plan-status-expired {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Action Button */
+.plan-delete-btn {
+  padding: 5px 12px;
+  font-size: 12px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.plan-delete-btn:hover {
+  background-color: #c82333;
+}
+
+.plan-delete-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+#insurance-center:not(.active-section) { display: none !important; }
+#insurance-center.active-section { display: block !important; }
+
+/* Ensure Insurance Center respects active-section visibility */
+#insurance-center:not(.active-section) { display: none !important; }
+#insurance-center.active-section { display: block !important; }

@@ -1,0 +1,20 @@
+{
+  "name": "coal-mine-3.0",
+  "version": "1.0.0",
+  "description": "Coal Mine Carbon Neutrality Dashboard",
+  "main": "server.cjs",
+  "scripts": {
+    "start": "node server.cjs"
+  },
+  "author": "Priyanshu Panwar",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.21.2",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.3",
+    "nodemailer": "^6.10.1"
+  }
+}

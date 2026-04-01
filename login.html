@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Carbon Neutrality</title>
+  <link rel="stylesheet" href="style.css?v=3.6">
+</head>
+<body class="login-body">
+
+  <div class="login-box" id="loginBox">
+    <h2>Coal Mine Login</h2>
+    <input type="text" id="username" placeholder="Username or Email" autocomplete="off" list="recent-logins">
+    <datalist id="recent-logins"></datalist>
+    <input type="password" id="password" placeholder="Password" autocomplete="off">
+    <button id="loginBtn">Login</button>
+    <p id="error"></p>
+    <div style="margin-top:12px; font-size:14px;color:#eef; display: flex; justify-content: space-between; width: 100%;">
+      <a href="#" id="showForgotPassword" onclick="showForgotPasswordForm(event)" style="color:#eef;">Forgot Password?</a>
+      <a href="#" id="showRegister" style="color:#eef;">Register</a>
+    </div>
+  </div>
+
+  <!-- Registration box (hidden by default) - same visual dimensions as login box -->
+  <div class="login-box" id="registerBox" style="display:none;">
+    <h2>Create Account</h2>
+    <input type="text" id="regUsername" placeholder="Username (letters + special char)" autocomplete="username">
+    <input type="email" id="regEmail" placeholder="Email (for verification)" autocomplete="email">
+    <input type="password" id="regPassword" placeholder="Password" autocomplete="new-password">
+    <input type="password" id="regPasswordConfirm" placeholder="Confirm password" autocomplete="new-password">
+    <div style="display:flex;gap:8px;">
+      <button id="sendOtpBtn" style="flex:1">Send OTP</button>
+      <button id="cancelRegister" style="flex:1;background:#e74c3c">Cancel</button>
+    </div>
+    <div id="otpArea" style="display:none;margin-top:8px;">
+      <input type="text" id="otpInput" placeholder="Enter OTP" style="width:100%;padding:10px;border-radius:6px;border:1px solid #ccc;">
+      <button id="verifyOtpBtn" style="margin-top:8px;width:100%;">Verify & Create Account</button>
+    </div>
+    <div id="regMsg" style="margin-top:8px;color:#fff;font-size:13px"></div>
+  </div>
+
+  <!-- Forgot Password box (hidden by default) -->
+  <div class="login-box" id="forgotBox" style="display:none;">
+    <h2>Reset Password</h2>
+    <p style="font-size:13px;color:#ddd;margin-bottom:10px;">Enter your username or email to receive a reset code.</p>
+    <input type="text" id="forgotIdentifier" placeholder="Enter username or email" autocomplete="off">
+    <div style="display:flex;gap:8px;">
+        <button id="sendResetOtpBtn" style="flex:1">Send OTP</button>
+        <button id="cancelForgot" style="flex:1;background:#e74c3c">Cancel</button>
+    </div>
+    <div id="resetOtpArea" style="display:none;margin-top:8px;">
+      <input type="text" id="resetOtpInput" placeholder="Enter OTP" style="width:100%;padding:10px;border-radius:6px;border:1px solid #ccc;">
+      <input type="password" id="newPassword" placeholder="New Password" autocomplete="new-password" style="margin-top:8px;">
+      <input type="password" id="newPasswordConfirm" placeholder="Confirm New Password" autocomplete="new-password" style="margin-top:8px;">
+      <button id="resetPasswordBtn" style="margin-top:8px;width:100%;">Reset Password</button>
+    </div>
+    <div id="forgotMsg" style="margin-top:8px;color:#fff;font-size:13px"></div>
+  </div>
+
+  <script>
+    // ✅ Clear any leftover session if redirected from logout
+    localStorage.removeItem('isLoggedIn');
+
+    // Helper: users stored in localStorage under 'users' as array of { id, name, email?, phone?, password }
+    function getUsers(){
+      try { return JSON.parse(localStorage.getItem('users') || '[]'); } catch(e){ return []; }
+    }
+    function saveUsers(u){ localStorage.setItem('users', JSON.stringify(u || [])); }
+
+    // --- Auto-suggest for username ---
+    function getRecentLogins() {
+      try { return JSON.parse(localStorage.getItem('recentLogins') || '[]'); } catch(e){ return []; }
+    }
+    function addRecentLogin(username) {
+      if (!username) return;
+      let recent = getRecentLogins().filter(u => u !== username);
+      recent.unshift(username); // Add to the front
+      localStorage.setItem('recentLogins', JSON.stringify(recent.slice(0, 5))); // Keep last 5
+    }
+
+    // LOGIN handler: try match against stored users, else fallback to default credential
+    document.getElementById('loginBtn').addEventListener('click', () => {
+      const user = document.getElementById('username').value.trim();
+      const pass = document.getElementById('password').value.trim();
+      const errorBox = document.getElementById('error');
+      errorBox.textContent = '';
+
+      if (!user || !pass) { errorBox.textContent = 'Please enter username and password'; errorBox.style.color='red'; return; }
+
+      const users = getUsers();
+      const found = users.find(u => (u.email && u.email === user) || (u.username && u.username === user));
+      if (found && found.password === pass) {
+        addRecentLogin(found.username || user);
+        localStorage.setItem('isLoggedIn', 'true');
+        window.location.href = 'index.html';
+        return;
+      }
+
+      // fallback hard-coded account for legacy access
+      if (user === 'mineuser' && pass === 'password123') {
+        addRecentLogin(user);
+        localStorage.setItem('isLoggedIn', 'true');
+        window.location.href = 'index.html';
+        return;
+      }
+
+      errorBox.textContent = '❌ Invalid credentials!';
+      errorBox.style.color = 'red';
+    });
+
+    // ENTER key to submit login when focused
+    document.getElementById('password').addEventListener('keypress', (e)=>{ if (e.key === 'Enter') document.getElementById('loginBtn').click(); });
+
+    // ---------- Registration UI Logic ----------
+    const showRegister = document.getElementById('showRegister');
+    const registerBox = document.getElementById('registerBox');
+    const loginBox = document.getElementById('loginBox');
+    const cancelRegister = document.getElementById('cancelRegister');
+
+    showRegister.addEventListener('click', (e)=>{ e.preventDefault(); loginBox.style.display='none'; registerBox.style.display='block'; });
+    cancelRegister.addEventListener('click', ()=>{ registerBox.style.display='none'; loginBox.style.display='block'; });
+
+    // ---------- FORGOT PASSWORD UI LOGIC ----------
+    function showForgotPasswordForm(event) {
+      event.preventDefault(); // stop jumping to top of page
+
+      // hide other boxes
+      document.getElementById('loginBox').style.display = 'none';
+      document.getElementById('registerBox').style.display = 'none';
+
+      // show forgot password box
+      document.getElementById('forgotBox').style.display = 'block';
+    }
+
+    // cancel button logic
+    const cancelForgot = document.getElementById('cancelForgot');
+    if (cancelForgot) {
+      cancelForgot.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('forgotBox').style.display = 'none';
+        document.getElementById('loginBox').style.display = 'block';
+      });
+    }
+
+    // ---------- FORGOT PASSWORD LOGIC ----------
+    document.getElementById('sendResetOtpBtn').addEventListener('click', async () => {
+      const identifier = document.getElementById('forgotIdentifier').value.trim();
+      const forgotMsg = document.getElementById('forgotMsg');
+      forgotMsg.textContent = "";
+
+      if (!identifier) {
+        forgotMsg.textContent = "Please enter your registered email.";
+        forgotMsg.style.color = "red";
+        return;
+      }
+
+      try {
+        const res = await fetch("/api/send-reset-otp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ identifier }),
+        });
+
+        const data = await res.json();
+        if (res.ok && data.message) {
+          forgotMsg.style.color = "lightgreen";
+          forgotMsg.textContent = data.message;
+
+          // show OTP + password fields
+          document.getElementById('resetOtpArea').style.display = 'block';
+        } else {
+          forgotMsg.style.color = "red";
+          forgotMsg.textContent = data.error || "Failed to send OTP.";
+        }
+      } catch (err) {
+        console.error(err);
+        forgotMsg.textContent = "Server error while sending OTP.";
+        forgotMsg.style.color = "red";
+      }
+    });
+
+    // ---------- RESET PASSWORD BUTTON LOGIC ----------
+    document.getElementById('resetPasswordBtn').addEventListener('click', async () => {
+      const identifier = document.getElementById('forgotIdentifier').value.trim();
+      const otp = document.getElementById('resetOtpInput').value.trim();
+      const newPassword = document.getElementById('newPassword').value; // Don't trim passwords
+      const confirmPassword = document.getElementById('newPasswordConfirm').value;
+      const forgotMsg = document.getElementById('forgotMsg');
+      forgotMsg.textContent = "";
+
+      // Validation
+      if (!identifier || !otp || !newPassword || !confirmPassword) {
+        forgotMsg.style.color = "red";
+        forgotMsg.textContent = "Please fill all fields.";
+        return;
+      }
+
+      if (newPassword !== confirmPassword) {
+        forgotMsg.style.color = "red";
+        forgotMsg.textContent = "Passwords do not match.";
+        return;
+      }
+
+      try {
+        const res = await fetch("/api/reset-password", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ identifier, otp, newPassword }),
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.message) {
+          // ✅ IMPORTANT: Update the password in localStorage
+          const users = getUsers();
+          const userIndex = users.findIndex(u => u.email === identifier || u.username === identifier);
+          if (userIndex > -1) {
+            users[userIndex].password = newPassword;
+            saveUsers(users);
+          }
+
+          forgotMsg.style.color = "lightgreen";
+          forgotMsg.textContent = data.message;
+
+          // After successful reset, redirect to login
+          setTimeout(() => {
+            document.getElementById('forgotBox').style.display = 'none';
+            document.getElementById('loginBox').style.display = 'block';
+          }, 2000);
+        } else {
+          forgotMsg.style.color = "red";
+          forgotMsg.textContent = data.error || "Failed to reset password.";
+        }
+      } catch (err) {
+        console.error("Reset error:", err);
+        forgotMsg.style.color = "red";
+        forgotMsg.textContent = "Server error while resetting password.";
+      }
+    });
+
+    // OTP flow — request server to send OTP to provided email (server must have SMTP configured)
+    const sendOtpBtn = document.getElementById('sendOtpBtn');
+    const otpArea = document.getElementById('otpArea');
+    const regMsg = document.getElementById('regMsg');
+
+    sendOtpBtn.addEventListener('click', async ()=>{
+      const username = document.getElementById('regUsername').value.trim();
+      const password = document.getElementById('regPassword').value || '';
+      const passwordConfirm = document.getElementById('regPasswordConfirm').value || '';
+      const method = 'email';
+
+      // username validation: must contain at least one letter and one special char (!@#$%^&*), length 3-20
+      const unameRe = /^(?=.*[A-Za-z])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*_.-]{3,20}$/;
+      if (!username) { regMsg.textContent = 'Please enter a username.'; return; }
+      if (!unameRe.test(username)) { regMsg.textContent = 'Username must be 3-20 chars, contain letters and at least one special char (!@#$%^&*).'; return; }
+      if (!password || password.length < 4) { regMsg.textContent = 'Password must be at least 4 characters.'; return; }
+      if (password !== passwordConfirm) { regMsg.textContent = 'Passwords do not match.'; return; }
+
+      let identifier = '';
+      identifier = (document.getElementById('regEmail').value || '').trim().toLowerCase();
+      if (!identifier) { regMsg.textContent = 'Enter a valid email.'; return; }
+
+      // check duplicate
+      const users = getUsers();
+      const dup = users.find(u => (u.email && u.email === identifier) || (u.username && u.username === username));
+      if (dup) { regMsg.textContent = 'An account with this identifier already exists.'; return; }
+
+      // store pending registration details until OTP verified
+      try { sessionStorage.setItem('pending_reg_'+identifier, JSON.stringify({ username, password })); } catch(e){ console.warn('sessionStorage set failed', e); }
+
+      // request server to send OTP
+      try {
+        regMsg.textContent = 'Requesting OTP…';
+        const resp = await fetch('/api/send-otp', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ method, identifier, username })
+        });
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data && data.error ? data.error : 'Failed to request OTP');
+        regMsg.textContent = 'OTP sent. Please check your email or phone and enter the code here.';
+        otpArea.style.display = 'block';
+      } catch (err) {
+        console.error('send-otp failed', err);
+        regMsg.textContent = 'Could not send OTP: ' + (err.message || err);
+      }
+    });
+
+    // Verify OTP and create user
+    document.getElementById('verifyOtpBtn').addEventListener('click', async ()=>{
+      const method = 'email';
+      const identifier = (document.getElementById('regEmail').value || '').trim().toLowerCase();
+      const entered = (document.getElementById('otpInput').value || '').trim();
+      if (!entered) { regMsg.textContent = 'Enter the OTP.'; return; }
+
+      try {
+        regMsg.textContent = 'Verifying OTP...';
+        const resp = await fetch('/api/verify-otp', { method: 'POST', headers: { 'Content-Type':'application/json' }, body: JSON.stringify({ identifier, otp: entered }) });
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data && data.error ? data.error : 'OTP verification failed');
+
+        // create user from pending registration saved earlier
+        const pendingRaw = sessionStorage.getItem('pending_reg_'+identifier);
+        if (!pendingRaw) { regMsg.textContent = 'Registration data missing. Please try registering again.'; return; }
+        const pending = JSON.parse(pendingRaw);
+        const users = getUsers();
+        const newUser = { id: 'u'+Date.now(), username: pending.username };
+        newUser.email = identifier;
+        newUser.password = pending.password;
+        users.push(newUser); saveUsers(users);
+
+        // cleanup pending
+        try { sessionStorage.removeItem('pending_reg_'+identifier); } catch(e){}
+
+        regMsg.textContent = 'Account created. Logging you in...';
+        setTimeout(()=>{ localStorage.setItem('isLoggedIn','true'); window.location.href = 'index.html'; }, 900);
+      } catch (err) {
+        console.error('verify-otp failed', err);
+        regMsg.textContent = 'OTP verification failed: ' + (err.message || err);
+      }
+    });
+
+    // allow Enter to submit OTP
+    document.getElementById('otpInput').addEventListener('keypress', (e)=>{ if (e.key === 'Enter') document.getElementById('verifyOtpBtn').click(); });
+
+    // --- On Page Load ---
+    document.addEventListener('DOMContentLoaded', () => {
+      const recentLogins = getRecentLogins();
+      const datalist = document.getElementById('recent-logins');
+      recentLogins.forEach(username => {
+        datalist.innerHTML += `<option value="${username}"></option>`;
+      });
+    });
+  </script>
+</body>
+</html>
